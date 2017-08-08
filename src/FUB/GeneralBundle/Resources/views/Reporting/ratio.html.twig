@@ -9,7 +9,7 @@
     <div id="encours"></div>
     <h4 class="sub-header">Historique des opérations</h4>
     <div id="history">
-        <table id="result" class="table table-striped"></table>
+        <table id="result" class="table table-bordered"></table>
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
@@ -111,7 +111,7 @@
                 success: function(response) {
                     var donnee=JSON.parse(response);
                     donnee.forEach(function(res){
-                        $(selector).append('<thead><tr><th></th><th style="text-align: right">Total = </th><th>'+res.amount+'</th><th>'+res.ratio+'</th><th></th></tr></thead>');
+                        $(selector).append('<thead><tr><th></th><th style="text-align: right">Total = </th><th style="text-align: right">'+res.amount+'</th><th style="text-align: right">'+res.ratio+'</th><th></th><th></th></tr></thead>');
                     });
                 },
                 error: function(XMLHttpRequest, textStatus, errorThrown)
@@ -130,8 +130,8 @@
             var url = '{{ path("fub_general_ajax_campagne_lastinvest") }}';
             document.getElementById('listdefi').innerHTML = "";
 
-            $('#listdefi').append('<table id="tab" class="table table-striped"></table>');
-            $('#tab').append('<thead><tr><th>Référence</th><th>Investisseur</th><th>Montant à investir</th><th>Ratio</th></tr></thead>');
+            $('#listdefi').append('<table id="tab" class="table table-bordered"></table>');
+            $('#tab').append('<thead><tr><th>Référence</th><th>Investisseur</th><th>Montant à investir</th><th>Ratio</th><th>Bénéfice TTC</th><th>Bénéfice HT</th></tr></thead>');
             $.ajax({
                 url: url,
                 type: "POST",
@@ -141,7 +141,7 @@
                     var donnee=JSON.parse(response);
                     $('#tab').append('<tbody>');
                     donnee.forEach(function(res){
-                        $('#tab').append('<tr><td>'+res.id+'</td><td>'+res.nom+'</td><td>'+res.amount+'</td><td>'+res.ratio+'</td></tr>');
+                        $('#tab').append('<tr><td>'+res.id+'</td><td>'+res.nom+'</td><td style="text-align: right">'+res.amount+'</td><td style="text-align: right">'+res.ratio+' %</td><td style="text-align: right">'+res.ben_ttc+'</td><td style="text-align: right">'+res.ben_ht+'</td></tr>');
                     });
                     $('#tab').append('</tbody>');
                     loadTotalInvesti('#tab');

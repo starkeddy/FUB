@@ -59,7 +59,7 @@ class InvestController extends Controller{
 
     public function loadAmountAction($id,Request $request){
         $sql="SELECT 
-                montant_chiffre amount
+                format(montant_chiffre,0) amount
             FROM adhesion
             WHERE flag=1 AND id=?";
 
@@ -75,7 +75,7 @@ class InvestController extends Controller{
         $sql="SELECT 
                 id,
                 CONCAT(nom,' ',prenom) nom,
-                montant_chiffre amount
+                format(montant_chiffre,0) amount
             FROM adhesion
             WHERE flag=1 order by id desc";
         $stmt=$this->getDoctrine()->getConnection()->prepare($sql);
@@ -89,14 +89,88 @@ class InvestController extends Controller{
 
     public function loadLastInvestisorAction(){
         $sql="SELECT
-                r1.id,
-                CONCAT(r1.nom,' ',r1.prenom) nom,
-                r2.amount,
-                concat(r2.ratio,'%') ratio
-            FROM adhesion r1
-            INNER JOIN 
-            (SELECT * FROM f_investissement WHERE flag=1) r2
-            ON r1.id=r2.refadhesion";
+            e7.id,
+            CONCAT(e7.nom,' ',e7.prenom) nom,
+            CONCAT(format(amount,0),' Ar')  amount,
+            ratio,
+            CONCAT(format(ben_ttc,2),' Ar')ben_ttc,
+            CONCAT(format(ben_ht,2),' Ar')ben_ht
+         FROM           
+        (SELECT
+            e5.refadhesion,
+            e5.amount,
+            e5.ratio,
+            ROUND((e5.ratio*e4.ben_ttc)/100,2) ben_ttc,
+            ROUND((e5.ratio*e4.ben_ht)/100,2) ben_ht
+            FROM
+            (
+            SELECT 
+                'a' joint,
+                refinv,
+                refadhesion,
+                amount,
+                ratio
+            FROM f_investissement 
+            WHERE flag=1
+            )e5
+            LEFT JOIN
+            (
+            SELECT 
+                e1.refinv,
+                e1.joint,
+                (IFNULL(e1.benefice,0)-IFNULL(e3.amount,0))/2 ben_ttc, 
+                (IFNULL(e1.benefice,0)-IFNULL(e3.amount,0))/1.2/2 ben_ht
+            FROM
+                (SELECT
+                'a' joint,
+                r1.refinv,
+                IFNULL(SUM(r2.benefice),0) benefice
+                FROM
+                (SELECT 
+                    refinv,
+                    start_upd_dt,
+                    CASE WHEN end_upd_dt='0000-00-00' THEN DATE_FORMAT(NOW(),'%Y-%m-%d') ELSE end_upd_dt END end_upd_dt
+                FROM rf_investissement WHERE statut=1) r1
+                LEFT JOIN 
+                vente r2
+                ON r1.refinv=r2.refinv AND (r2.upd_dt BETWEEN r1.start_upd_dt AND r1.end_upd_dt)
+                GROUP BY r1.refinv)e1
+            LEFT JOIN 
+            (	SELECT
+                'a' joint,	
+                IFNULL(SUM(amount),0) amount 	
+                FROM
+                (
+                SELECT
+                    IFNULL(SUM(valeurpaye+endamnite),0) amount 
+                FROM 
+                    (SELECT 
+                    refinv,
+                    start_upd_dt,
+                    CASE WHEN end_upd_dt='0000-00-00' THEN DATE_FORMAT(NOW(),'%Y-%m-%d') ELSE end_upd_dt END end_upd_dt
+                    FROM rf_investissement WHERE statut=1) t1
+                LEFT JOIN journalpaiesalaire t2
+                ON t2.upd_dt BETWEEN t1.start_upd_dt AND t1.end_upd_dt
+                UNION ALL
+                SELECT
+                    IFNULL(SUM(montant),0) amount 
+                FROM 
+                    (SELECT 
+                    refinv,
+                    start_upd_dt,
+                    CASE WHEN end_upd_dt='0000-00-00' THEN DATE_FORMAT(NOW(),'%Y-%m-%d') ELSE end_upd_dt END end_upd_dt
+                    FROM rf_investissement WHERE statut=1) z1
+                LEFT JOIN journalpaielogistique z2
+                ON z2.upd_dt BETWEEN z1.start_upd_dt AND z1.end_upd_dt
+                )e2
+            )e3
+            ON e1.joint=e3.joint
+            )e4
+            ON e5.joint=e4.joint
+        )e6
+        LEFT JOIN adhesion e7
+        ON e6.refadhesion=e7.id
+";
 
         $stmt=$this->getDoctrine()->getConnection()->prepare($sql);
         $stmt->execute();
@@ -109,7 +183,7 @@ class InvestController extends Controller{
 
     public function loadTotalAction(){
         $sql="SELECT
-                SUM(r2.amount) amount,
+                concat(format(SUM(r2.amount),0),' Ar') amount,
                 concat(round(SUM(r2.ratio),2),'%') ratio
             FROM adhesion r1
             INNER JOIN 
@@ -180,7 +254,7 @@ class InvestController extends Controller{
             start_upd_dt 'Début de l''opération',
             end_upd_dt 'Fin de l''opération',              
             IFNULL(t.nb,0) 'Nombre d''investisseur',
-            IFNULL(t.amount,0) 'Montant total investi',
+            concat(format(IFNULL(t.amount,0),0),' Ar') 'Montant total investi',
             (CASE WHEN statut=1 THEN 'Encours' ELSE 'Terminé' END)'Status'
             FROM rf_investissement r 
             LEFT JOIN (SELECT refinv, COUNT(*)nb, SUM(amount)amount FROM f_investissement

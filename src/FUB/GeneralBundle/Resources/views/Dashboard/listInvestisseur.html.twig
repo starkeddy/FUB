@@ -1,6 +1,6 @@
 {% extends 'FUBGeneralBundle:Default:dashboard.html.twig' %}
 {% block content%}
-    <h1 class="page-header">Liste des investisseurs</h1>
+    <h4 class="page-header">Liste des investisseurs</h4>
     {% for invest in investisseurs %}
         <div id="migration" class="bs-callout bs-callout-info">
             <img src="{{ asset('uploads/pictures/'~invest.picture) }}" alt="..." style="text-align: center" width="50" height="50">

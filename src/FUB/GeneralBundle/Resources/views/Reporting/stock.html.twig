@@ -5,7 +5,7 @@
 
     <table>
         <tr>
-            <td>Afficher le stock pour la référence d'investissement : </td>
+            <td>Afficher le stock pour la référence de l'opération : </td>
             <td><select id="inv" onchange="loadStock(this.value)"></select></td>
         </tr>
     </table>
@@ -24,7 +24,7 @@
             document.getElementById('inv').innerHTML = "";
             donnee.forEach(function (list) {
                 daySelect = document.getElementById('inv');
-                daySelect.options[daySelect.options.length] = new Option('Invest '+list.refinv, list.refinv);
+                daySelect.options[daySelect.options.length] = new Option(list.refinv, list.refinv);
             });
         }
 
@@ -88,7 +88,7 @@
 
         function addAllColumnHeaders(myList, selector) {
             var columnSet = [];
-            var heads=$('<thead/>');
+            var heads=$('<thead style="text-align: center"/>');
             var headerTr$ = $('<tr/>');
 
             for (var i = 0; i < myList.length; i++) {

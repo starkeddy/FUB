@@ -40,15 +40,15 @@ class RatioController extends Controller{
 
         $sql2="SELECT
                 e5.*,
-                round((e5.ratio*e4.ben_ttc)/100,2) ben_ttc,
-                round((e5.ratio*e4.ben_ht)/100,2) ben_ht
+                format(round((e5.ratio*e4.ben_ttc)/100,2),2) ben_ttc,
+                format(round((e5.ratio*e4.ben_ht)/100,2),2) ben_ht
             FROM
             (
                 SELECT 
                     'a' joint,
                     refinv,
                     refadhesion,
-                    amount,
+                    format(amount,0) amount,
                     ratio
                 FROM f_investissement 
                 WHERE flag=1 AND refadhesion=".$id."

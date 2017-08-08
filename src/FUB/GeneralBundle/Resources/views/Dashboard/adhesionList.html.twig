@@ -1,7 +1,7 @@
 {% extends 'FUBGeneralBundle:Default:dashboard.html.twig' %}
 {% block content%}
-    <h1 class="page-header">Liste des demandes d'adhésion à valider</h1>
-    <h2 class="page-header">Demande effectuée en ligne</h2>
+    <h4 class="page-header">Liste des demandes d'adhésion à valider</h4>
+    <h4 class="page-header">Demande effectuée en ligne</h4>
     <h4><span class="badge">{{ demande|length }}</span> demande(s)</h4>
     {% for adhesion in demande %}
         <div id="migration" class="bs-callout bs-callout-info">

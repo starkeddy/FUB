@@ -65,9 +65,7 @@ class CAglobalController extends Controller{
     public function loadStockAction($refinv,Request $request){
         $sql="SELECT 
                 a.refarticle Référence, 
-                b.designation Désignation, 
-                b.description Description, 
-                c.designation Catégorie, 
+                b.designation Désignation,               
                 a.qty Quantité, 
                 b.prixachat 'Prix d''achat', 
                 b.prixvente 'Prix de vente estimé', 
@@ -76,7 +74,6 @@ class CAglobalController extends Controller{
                 a.observation 'Observation'
             FROM stock a 
             INNER JOIN article b ON a.refarticle=b.refarticle 
-            INNER JOIN categorie c ON b.refcategorie=c.refcategorie
             where a.refinv=?
             order by 1";
         $stmt=$this->getDoctrine()->getConnection()->prepare($sql);

@@ -10,14 +10,14 @@
                 </iframe>
             </div>
         </div>
-        <div class="thumbnail" style="text-align: center">
-            <img src="{{ asset('pictures/fub.png') }}" alt="..." style="text-align: center" width="40%" height="40%">
-            {% for annonce in annonces %}
+
+        {% for annonce in annonces %}
+            <div class="thumbnail" style="text-align: center">
                 <p><h4>{{ annonce.contenu }}</h4></p>
                 <p>Date éstimée du prochain investissement <h3><span class="label label-success">{{ annonce.updDt|date('d-m-Y') }}</span></h3></p>
                 <p><a class="btn btn-lg btn-primary" href="{{ path('fub_general_adhesionFrom') }}">S'investir</a></p>
-            {% endfor %}
-        </div>
+            </div>
+        {% endfor %}
 
         <div id="migration" class="bs-callout bs-callout-warning">
             <h4>A propos</h4>
