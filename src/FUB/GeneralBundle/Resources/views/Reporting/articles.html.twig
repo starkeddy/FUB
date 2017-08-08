@@ -1,0 +1,67 @@
+{% extends 'FUBGeneralBundle:Default:dashboard.html.twig' %}
+{% block content%}
+    <h4 class="sub-header">Liste exhaustive des articles en vente</h4>
+    <div class="table-responsive">
+        <table id="result" class="table table-striped"></table>
+    </div>
+    <script>
+        window.onload =loadArticle;
+
+        function loadArticle(){
+            var url = '{{ path("fub_general_ajax_article_liste") }}';
+
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: {  },
+                dataType: "json",
+                success: function(response) {
+                    var donnee = JSON.parse(response);
+                    document.getElementById('result').innerHTML = "";
+                    buildHtmlTable(donnee,'#result');
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown)
+                {
+                    alert('Error: ' +  errorThrown);
+                }
+            });
+
+        }
+
+        function buildHtmlTable(myList,selector) {
+            var columns = addAllColumnHeaders(myList, selector);
+            var rows=$('<tbody/>');
+
+            for (var i = 0; i < myList.length; i++) {
+                var row$ = $('<tr/>');
+                for (var colIndex = 0; colIndex < columns.length; colIndex++) {
+                    var cellValue = myList[i][columns[colIndex]];
+                    if (cellValue == null) cellValue = "";
+                    row$.append($('<td/>').html(cellValue));
+                }
+                $(rows).append(row$);
+            }
+            $(selector).append(rows);
+        }
+
+        function addAllColumnHeaders(myList, selector) {
+            var columnSet = [];
+            var heads=$('<thead/>');
+            var headerTr$ = $('<tr/>');
+
+            for (var i = 0; i < myList.length; i++) {
+                var rowHash = myList[i];
+                for (var key in rowHash) {
+                    if ($.inArray(key, columnSet) == -1) {
+                        columnSet.push(key);
+                        headerTr$.append($('<th/>').html(key));
+                    }
+                }
+            }
+            $(heads).append(headerTr$);
+            $(selector).append(heads);
+
+            return columnSet;
+        }
+    </script>
+{% endblock %}

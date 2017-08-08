@@ -1,0 +1,250 @@
+{% for adhesion in demande %}
+    <div style="text-align: center">
+        <table>
+            <tr>
+                <td><img src="{{ asset('pictures/fub.png') }}" alt="..." style="text-align: center" width="55" height="40"></td>
+                <td>
+                    <h3><u>CONTRAT D'INVESTISSEMENT</u></h3>
+                </td>
+                <td><img src="{{ asset('pictures/fub.png') }}" alt="..." style="text-align: center" width="55" height="40"></td>
+            </tr>
+        </table>
+    </div>
+    <div>
+        <table border="1" style="padding: 3px;">
+            <tr>
+                <td rowspan="10" >
+                    <u>Entre:</u>
+                </td>
+                <td colspan="2"><b>{{ adhesion.nom }} {{ adhesion.prenom }}</b></td>
+                <td rowspan="8"><img src="{{ asset('uploads/pictures/'~adhesion.picture) }}" alt="..." style="text-align: center" width="100" height="100"></td>
+            </tr>
+            <tr>
+                <td colspan="2"><u>Date de naissance:</u> {{ adhesion.dateNaissance|date('d-m-Y') }}</td>
+            </tr>
+            <tr>
+                <td colspan="2"><u>Profession:</u> {{ adhesion.profession }}</td>
+            </tr>
+            <tr>
+                <td colspan="2"><u>Nationalité:</u> {{ adhesion.nationalite }}</td>
+            </tr>
+            <tr>
+                <td colspan="2"><u>Adresse:</u> {{ adhesion.adresse }}</td>
+            </tr>
+            <tr>
+                <td colspan="2"><u>Pays de résidence:</u> {{ adhesion.country }}</td>
+            </tr>
+            <tr>
+                <td colspan="2"><u>Contact:</u> +{{ adhesion.contact }}</td>
+            </tr>
+            <tr>
+                <td colspan="2"><u>E-Mail:</u> {{ adhesion.mail }}</td>
+            </tr>
+            <tr>
+                <td rowspan="2"><u>Filiation</u></td>
+                <td colspan="3"><u>Père:</u> {{ adhesion.perenom }}</td>
+            </tr>
+            <tr>
+                <td colspan="3"><u>Mère:</u> {{ adhesion.merenom }}</td>
+            </tr>
+            <tr>
+                <td rowspan="8"><u>Et:</u></td>
+                <td colspan="3">La société <b>FUB</b></td>
+            </tr>
+            <tr>
+                <td colspan="3"><b>FREE UNITED BUSINESS</b></td>
+            </tr>
+            <tr>
+                <td colspan="3"><u>NIF:</u> 3002606411</td>
+            </tr>
+            <tr>
+                <td colspan="3"><u>RCS:</u> 2017 B 00233</td>
+            </tr>
+            <tr>
+                <td colspan="3"><u>STAT:</u> 4742311 11 2017 0 10246</td>
+            </tr>
+            <tr>
+                <td colspan="3"><u>Siège social:</u> TSIAZOTAFO LOT II 33 BOX N 108 IMMEUBLE PARADISE</td>
+            </tr>
+            <tr>
+                <td colspan="3">IMMEUBLE PARADISE- ANTANANARIVO-MADAGASCAR</td>
+            </tr>
+            <tr>
+                <td colspan="3"><u>Contact:</u><a href="fub@fubmad.com"> fub@fubmad.com</a></td>
+            </tr>
+        </table>
+        </br>
+        <div style="text-align: center"><font size="11"><u>INVESTISSMENT</u></font></div>
+        <div><font size="11">
+            Pour la reférence du contrat <b><u>{{ contratID }}</u></b>. L'investisseur <b>{{ adhesion.nom }} {{ adhesion.prenom }}</b> a effectué un apport
+                d'une valeur de: <u>Ar {{ adhesion.montantChiffre }}.</u>
+                <br>Soit <b>{{ adhesion.montantLettre }}</b>  Ariary.
+            Pour une durée de contrat de <b>{{ adhesion.dureeContrat }}</b> mois à compter de la date de virement.</br>
+            Le virement s'effectuera dans un délai de 10 jours au maximum.</font>
+        </div>
+        <br>
+
+        <table style="font-size: 7; text-align: center">
+            <tr>
+                <td>
+                    <table border="1" style="padding: 3px;">
+                        <tr>
+                            <td colspan="4" ><b>Identifiant national de compte bancaire - RIB</b></td>
+                        </tr>
+                        <tr>
+                            <td><b>Banque</b></td>
+                            <td><b>Agence</b></td>
+                            <td><b>Compte</b></td>
+                            <td><b>Clé</b></td>
+                        </tr>
+                        <tr>
+                            <td>00005</td>
+                            <td>00010</td>
+                            <td>70007170001</td>
+                            <td>63</td>
+                        </tr>
+                    </table>
+                </td>
+                <td>
+                    <table border="1" style="padding: 3px;">
+                        <tr>
+                            <td colspan="2"><b>Domiciliation</b></td>
+                            <td colspan="2"><b>BIC (bank identifier code)</b></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">BNI</td>
+                            <td colspan="2">CLMDMGMG</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" ><b>IBAN</b></td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" >MG46 0000 5000 1070 0071 7000 163</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+
+        <br><br>
+        <table border="0">
+            <tr>
+                <td colspan="4"><font size="11">L'investisseur <b>{{ adhesion.nom }} {{ adhesion.prenom }}</b><br>
+                    Je prends connaissance de tous les articles du contrat.<br>
+                    Signature précédé de "Lu et approuvé.</font>
+                </td>
+                <td style="border: 1px solid black;height: 60px; text-align: center">
+                    <font size="7"><u>Investisseur</u></font>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4" style="text-align: center"><u><b>Les associés de la société FUB SARL</b></u></td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid black;height: 70px; text-align: center">
+                    <font size="7"><u>BARRY MAMADOU BAILO(Président)</u></font>
+                </td>
+                <td style="border: 1px solid black;height: 70px; text-align: center">
+                    <font size="7"><u>BARRY ABDOULAYE(Secrétaire)</u></font>
+                </td>
+                <td style="border: 1px solid black;height: 70px; text-align: center">
+                    <font size="7"><u>BAH IBRAHIMA(Resp. Commecrial)</u></font>
+                </td>
+                <td style="border: 1px solid black;height: 70px; text-align: center">
+                    <font size="7"><u>SOW IBRAHIMA SORY(Resp. Communication)</u></font>
+                </td>
+                <td style="border: 1px solid black;height: 70px; text-align: center">
+                    <font size="7"><u>BAH ALPHA OUMAR(Caissier)</u></font>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+
+    <style>
+        .panel {
+            margin-bottom: 20px;
+            background-color: #fff;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+            box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+        }
+        .panel-primary {
+          border-color: #337ab7;
+        }
+        .panel-primary > .panel-heading {
+          color: #fff;
+          background-color: #337ab7;
+          border-color: #337ab7;
+        }
+        .panel-primary > .panel-heading + .panel-collapse > .panel-body {
+          border-top-color: #337ab7;
+        }
+        .panel-primary > .panel-heading .badge {
+          color: #337ab7;
+          background-color: #fff;
+        }
+        .panel-primary > .panel-footer + .panel-collapse > .panel-body {
+          border-bottom-color: #337ab7;
+        }
+        .panel-body:before,
+        .panel-body:after,
+        .container:before,
+        .container:after{
+          display: table;
+          content: " ";
+        }
+    </style>
+
+    <!--<link rel="stylesheet" href="{{ asset('css/bootstrap.css')}}">-->
+
+    <h3>Pré requis et article de règlement</h3>
+    <div class="panel panel-primary">
+        <div class="panel-heading">Article 1</div>
+        <div class="panel-body">
+            Il n'est autorisé à devenir un investisseur de la société FUB que soit une personne morale ou une personne
+            physique ayant plus de 18 ans sans distinction de sexe et/ou d'origine.
+        </div>
+    </div>
+    <div class="panel panel-primary">
+        <div class="panel-heading">Article 2</div>
+        <div class="panel-body">
+            La convention entre la société FUB et l'investisseur se régime par un contrat, d'une durée de 12 mois renouvelable.
+        </div>
+    </div>
+    <div class="panel panel-primary">
+        <div class="panel-heading">Article 3</div>
+        <div class="panel-body">
+            Le montant minimum pour investir dans la société FUB est évalué à (cinq millions d'Ariary) 5.000.000 Ar.
+        </div>
+    </div>
+    <div class="panel panel-primary">
+        <div class="panel-heading">Article 4</div>
+        <div class="panel-body">
+            La répartition du bénéfice sur le revenue se calculera par rapport au ratio investi de chaque investisseur,
+            imputé du montant de réserve pour l'auto investissement d'une valeur de 50% du résultat net.
+        </div>
+    </div>
+    <div class="panel panel-primary">
+        <div class="panel-heading">Article 5</div>
+        <div class="panel-body">
+            A la date d'échéance du contrat, le montant investi sera remboursé à l'investisseur.
+        </div>
+    </div>
+    <div class="panel panel-primary">
+        <div class="panel-heading">Article 6</div>
+        <div class="panel-body">
+            L'investisseur a le droit de retirer le montant du bénéfice sous préavis de 20 jours, la société FUB
+            versera à l'investisseur le monant convenu.
+            <p><u>Notes:</u> le frais de la transaction sera prise en charge par l'investisseur.</p>
+        </div>
+    </div>
+    <div class="panel panel-primary">
+        <div class="panel-heading">Article 7</div>
+        <div class="panel-body">
+            Dans le cas de décès de l'investisseur, la société versera la totalité du montant investi du défunt aux
+            héritiers mentionnés dans le formulaire rempli lors du contrat.
+        </div>
+    </div>
+{% endfor %}

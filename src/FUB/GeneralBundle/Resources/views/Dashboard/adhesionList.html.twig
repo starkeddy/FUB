@@ -1,0 +1,26 @@
+{% extends 'FUBGeneralBundle:Default:dashboard.html.twig' %}
+{% block content%}
+    <h1 class="page-header">Liste des demandes d'adhésion à valider</h1>
+    <h2 class="page-header">Demande effectuée en ligne</h2>
+    <h4><span class="badge">{{ demande|length }}</span> demande(s)</h4>
+    {% for adhesion in demande %}
+        <div id="migration" class="bs-callout bs-callout-info">
+            <a href="{{ path('fub_general_dashboard_viewadhesion',{'demande': adhesion.id }) }}">
+                <img src="{{ asset('uploads/pictures/'~adhesion.picture) }}" alt="..." style="text-align: center" width="50" height="50"> {{ adhesion.nom }} {{ adhesion.prenom }}
+            </a>
+        </div>
+    {% endfor %}
+    <h2 class="page-header">Demande sur format PDF envoyée</h2>
+    <h4><span class="badge">{{ upload|length }}</span> demande(s)</h4>
+    {% for pdf in upload %}
+        <div id="migration" class="bs-callout bs-callout-info">
+            <a href="{{ asset('uploads/pdf/'~pdf.file ) }}">{{ pdf.file }}</a>
+            <div>
+                <a class="btn btn-danger" onclick='return confirm("Voulez-vous vraiment supprimer le PDF?")'
+                   href="{{ path('fub_general_dashboard_deleteAdhesionPDF',{'uploadId': pdf.file }) }}">
+                    Supprimer PDF
+                </a>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}

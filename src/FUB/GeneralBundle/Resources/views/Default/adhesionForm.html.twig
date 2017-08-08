@@ -1,0 +1,255 @@
+{% extends '::base.html.twig' %}
+{% block title %}Formulaire d'adhésion{% endblock %}
+{% block body%}
+    <div class="container" style="margin-top: 70px; width: 90%;">
+        <div class="alert alert-info" role="alert">
+            Formulaire d'adhésion à remplir pour investir chez <b>FREE-UNITED-BUSINESS</b>
+        </div>
+
+        <div class="alert alert-warning" role="alert"><b><u>Note:</u></b> Apres l'examen de votre dossier, nous vous enverrons par la suite
+            le contrat à signer, puis de nous le remettre à nouveau.
+        </div>
+
+        {% block formulaire %}
+            {{ form_start(form2, {'attr': {'class': 'form-horizontal'}}) }}
+            {{ form_errors(form2) }}
+            <div class="container">
+                Télécharger le formulaire de demande d'adhésion
+                <a class="btn btn-primary" href="{{ asset('download/article.pdf') }}">Télécharger</a></br></br>
+            </div>
+
+            <div class="container">
+                Puis nous l'envoyer au format PDF une fois rempli.</br>{{ form_widget(form2.file, {'attr': {'class': 'btn btn-primary'}}) }}</br>
+                {{ form_widget(form2.upload, {'attr': {'class': 'btn btn-primary'},'label':'Envoyer'}) }}</br></br>
+                Ou bien de remplir le formulaire d'adhésion ci-dessous.</br></br>
+            </div>
+            {{ form_rest(form2) }}
+            {{ form_end(form2) }}
+
+            {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+            {{ form_errors(form) }}
+            <div class="form-group">
+                <table style="margin: 0 auto" width="90%" class="table table-bordered">
+                    <tr>
+                        <td>{{ form_label(form.picture, "Photo", {'label_attr': {'class': 'control-label'}}) }}
+                            {{ form_errors(form.picture) }}
+                        </td>
+                        <td colspan="3">
+                            {{ form_widget(form.picture, {'attr': {'class': 'btn btn-primary'}}) }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {{ form_label(form.nom, "Nom", {'label_attr': {'class': 'control-label'}}) }}
+                            {{ form_errors(form.nom) }}
+                        </td>
+                        <td>
+                            {{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
+                        </td>
+                        <td>
+                            {{ form_label(form.prenom, "Prénom(s)", {'label_attr': {'class': 'control-label'}}) }}
+                            {{ form_errors(form.prenom) }}
+                        </td>
+                        <td>
+                            {{ form_widget(form.prenom, {'attr': {'class': 'form-control'}}) }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {{ form_label(form.dateNaissance, "Date de naissance (dd-MM-yyyy)", {'label_attr': {'class': 'control-label'}}) }}
+                            {{ form_errors(form.dateNaissance) }}
+                        </td>
+                        <td>
+                            {{ form_widget(form.dateNaissance, {'attr': {'class': 'form-control'}}) }}
+                        </td>
+                        <td>
+                            {{ form_label(form.profession, "Profession", {'label_attr': {'class': 'control-label'}}) }}
+                            {{ form_errors(form.profession) }}
+                        </td>
+                        <td>
+                            {{ form_widget(form.profession, {'attr': {'class': 'form-control'}}) }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th rowspan="2">
+                            Filiation
+                        </th>
+                        <td>
+                            {{ form_label(form.perenom, "Père", {'label_attr': {'class': 'control-label'}}) }}
+                            {{ form_errors(form.perenom) }}
+                        </td>
+                        <td colspan="2">
+                            {{ form_widget(form.perenom, {'attr': {'class': 'form-control'}}) }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {{ form_label(form.merenom, "Mère", {'label_attr': {'class': 'control-label'}}) }}
+                            {{ form_errors(form.merenom) }}
+                        </td>
+                        <td colspan="2">
+                            {{ form_widget(form.merenom, {'attr': {'class': 'form-control'}}) }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {{ form_label(form.nationalite, "Nationalité", {'label_attr': {'class': 'control-label'}}) }}
+                            {{ form_errors(form.nationalite) }}
+                        </td>
+                        <td>
+                            {{ form_widget(form.nationalite, {'attr': {'class': 'form-control'}}) }}
+                        </td>
+                        <td>
+                            {{ form_label(form.adresse, "Adresse", {'label_attr': {'class': 'control-label'}}) }}
+                            {{ form_errors(form.adresse) }}
+                        </td>
+                        <td>
+                            {{ form_widget(form.adresse, {'attr': {'class': 'form-control'}}) }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {{ form_label(form.ville, "Ville", {'label_attr': {'class': 'control-label'}}) }}
+                            {{ form_errors(form.ville) }}
+                        </td>
+                        <td>
+                            {{ form_widget(form.ville, {'attr': {'class': 'form-control'}}) }}
+                        </td>
+                        <td>
+                            {{ form_label(form.country, "Pays", {'label_attr': {'class': 'control-label'}}) }}
+                            {{ form_errors(form.country) }}
+                        </td>
+                        <td>
+                            {{ form_widget(form.country, {'attr': {'class': 'form-control'}}) }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {{ form_label(form.contact, "Contact", {'label_attr': {'class': 'control-label'}}) }}
+                            {{ form_errors(form.contact) }}
+                        </td>
+                        <td>
+                            <div class="input-group">
+                                <span class="input-group-addon">+</span>{{ form_widget(form.contact, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+                        </td>
+                        <td>
+                            {{ form_label(form.mail, "E-mail", {'label_attr': {'class': 'control-label'}}) }}
+                            {{ form_errors(form.mail) }}
+                        </td>
+                        <td>
+                            <div class="input-group">
+                                <span class="input-group-addon">@</span>{{ form_widget(form.mail, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th rowspan="2">Montant à investir</th>
+                        <td>
+                            {{ form_label(form.montantChiffre, "en chiffre", {'label_attr': {'class': 'control-label'}}) }}
+                            {{ form_errors(form.montantChiffre) }}
+                        </td>
+                        <td colspan="2">
+                            <div class="input-group">
+                                <span class="input-group-addon">Ar</span>{{ form_widget(form.montantChiffre, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {{ form_label(form.montantLettre, "en lettre", {'label_attr': {'class': 'control-label'}}) }}
+                            {{ form_errors(form.montantLettre) }}
+                        </td>
+                        <td colspan="2">
+                            <div class="input-group">
+                                <span class="input-group-addon">Ar</span>{{ form_widget(form.montantLettre, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {{ form_label(form.dateContrat, "Date début de contrat (dd-MM-yyyy)", {'label_attr': {'class': 'control-label'}}) }}
+                            {{ form_errors(form.dateContrat) }}
+                        </td>
+                        <td>
+                            {{ form_widget(form.dateContrat, {'attr': {'class': 'form-control'}}) }}
+                        </td>
+                        <td>
+                            {{ form_label(form.dureeContrat, "Durée du contrat", {'label_attr': {'class': 'control-label'}}) }}
+                            {{ form_errors(form.dureeContrat) }}
+                        </td>
+                        <td>
+                            {{ form_widget(form.dureeContrat, {'attr': {'class': 'form-control'}}) }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th rowspan="4">Qui contacter en cas </br>de force majeur ou </br>de décès</th>
+                        <td>
+                            {{ form_label(form.heritieNomPrenom, "Nom et prénom(s)", {'label_attr': {'class': 'control-label'}}) }}
+                            {{ form_errors(form.heritieNomPrenom) }}
+                        </td>
+                        <td colspan="2">
+                            {{ form_widget(form.heritieNomPrenom, {'attr': {'class': 'form-control'}}) }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {{ form_label(form.heritierContact, "Contact", {'label_attr': {'class': 'control-label'}}) }}
+                            {{ form_errors(form.heritierContact) }}
+                        </td>
+                        <td colspan="2">
+                            <div class="input-group">
+                                <span class="input-group-addon">+</span>{{ form_widget(form.heritierContact, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {{ form_label(form.heritierMail, "E-mail", {'label_attr': {'class': 'control-label'}}) }}
+                            {{ form_errors(form.heritierMail) }}
+                        </td>
+                        <td colspan="2">
+                            <div class="input-group">
+                                <span class="input-group-addon">@</span>{{ form_widget(form.heritierMail, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {{ form_label(form.heritierAdresse, "Adresse", {'label_attr': {'class': 'control-label'}}) }}
+                            {{ form_errors(form.heritierAdresse) }}
+                        </td>
+                        <td colspan="2">
+                            {{ form_widget(form.heritierAdresse, {'attr': {'class': 'form-control'}}) }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th rowspan="2">Sondage</th>
+                        <th>
+                            Comment aviez-vous</br>connu FUB?
+                            {{ form_errors(form.sondageFub) }}
+                        </th>
+                        <td colspan="2">
+                            {{ form_widget(form.sondageFub, {'attr': {'class': 'form-control'}}) }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Qu'est-ce qui vous</br>pousse à investir chez FUB?
+                            {{ form_errors(form.motivationFub) }}
+                        </th>
+                        <td colspan="2">
+                            {{ form_widget(form.motivationFub, {'attr': {'class': 'form-control'}}) }}
+                        </td>
+                    </tr>
+                </table>
+                <div style="margin: 10px 0 0 43%">{{ form_widget(form.valid, {'attr': {'class': 'btn btn-success'},'label': 'Envoyer la demande'}) }}</div>
+            </div>
+
+            {{ form_rest(form) }}
+            {{ form_end(form) }}
+        {% endblock %}
+    </div>
+{% endblock %}
+
+

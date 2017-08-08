@@ -1,0 +1,108 @@
+{% for adhesion in demande %}
+    <div style="text-align: center">
+        <table>
+            <tr>
+                <td><img src="{{ asset('pictures/fub.png') }}" alt="..." style="text-align: center" width="55" height="40"></td>
+                <td><h3><u>Information détailée sur l'investisseur</u></h3></td>
+                <td><img src="{{ asset('pictures/fub.png') }}" alt="..." style="text-align: center" width="55" height="40"></td>
+            </tr>
+        </table>
+    </div>
+    <div>
+        <table border="1" style="padding: 3px;">
+            <tr>
+                <td colspan="3"></td>
+                <td><img src="{{ asset('uploads/pictures/'~adhesion.picture) }}" alt="..." style="text-align: center" width="100" height="100"></td>
+            </tr>
+            <tr>
+                <th><b>Nom</b></th>
+                <td>{{ adhesion.nom }}</td>
+                <th><b>Prénom(s)</b></th>
+                <td>{{ adhesion.prenom }}</td>
+            </tr>
+            <tr>
+                <th><b>Date de naissance</b></th>
+                <td>{{ adhesion.dateNaissance|date('d-m-Y') }}</td>
+                <th><b>Profession</b></th>
+                <td>{{ adhesion.profession }}</td>
+            </tr>
+            {% if is_granted('ROLE_ADMIN') %}
+                <tr>
+                    <th rowspan="2"><b>Filiation</b></th>
+                    <th><b>Père</b></th>
+                    <td colspan="2">{{ adhesion.perenom }}</td>
+                </tr>
+                <tr>
+                    <th><b>Mère</b></th>
+                    <td colspan="2">{{ adhesion.merenom }}</td>
+                </tr>
+            {% endif %}
+            <tr>
+                <th><b>Nationalité</b></th>
+                <td>{{ adhesion.nationalite }}</td>
+                <th><b>Adresse</b></th>
+                <td>{{ adhesion.adresse }}</td>
+            </tr>
+            <tr>
+                <th><b>Ville</b></th>
+                <td>{{ adhesion.ville }}</td>
+                <th><b>Pays</b></th>
+                <td>{{ adhesion.country }}</td>
+            </tr>
+            <tr>
+                <th><b>Contact</b></th>
+                <td>+{{ adhesion.contact }}</td>
+                <th><b>E-Mail</b></th>
+                <td>{{ adhesion.mail }}</td>
+            </tr>
+            <tr>
+                <th rowspan="2"><b>Montant à investir</b></th>
+                <th><b>en chiffre</b></th>
+                <td colspan="2">{{ adhesion.montantChiffre }}</td>
+            </tr>
+            <tr>
+                <th><b>en lettre</b></th>
+                <td colspan="2">{{ adhesion.montantLettre }}</td>
+            </tr>
+            <tr>
+                <th><b>Date début du contrat</b></th>
+                <td>{{ adhesion.dateContrat|date('d-m-Y') }}</td>
+                <th><b>Durée du contrat</b></th>
+                <td>{{ adhesion.dureeContrat }} mois</td>
+            </tr>
+            {% if is_granted('ROLE_ADMIN') %}
+                <tr>
+                    <th rowspan="4"><b>Qui contacter en cas
+                        de force majeur ou
+                        de décès</b>
+                    </th>
+                    <th><b>Nom et prénom(s)</b></th>
+                    <td colspan="2">{{ adhesion.heritieNomPrenom }}</td>
+                </tr>
+                <tr>
+                    <th><b>Contact</b></th>
+                    <td colspan="2">+{{ adhesion.heritierContact }}</td>
+                </tr>
+                <tr>
+                    <th><b>E-Mail</b></th>
+                    <td colspan="2">{{ adhesion.heritierMail }}</td>
+                </tr>
+                <tr>
+                    <th><b>Adresse</b></th>
+                    <td colspan="2">{{ adhesion.heritierAdresse }}</td>
+                </tr>
+                <tr>
+                    <th rowspan="2"><b>Sondage</b></th>
+                    <th><b>Comment aviez-vous
+                        connu FUB? </b></th>
+                    <td colspan="2">{{ adhesion.sondageFub }}</td>
+                </tr>
+                <tr>
+                    <th><b>Qu'est-ce qui vous
+                        pousse à investir chez FUB? </b></th>
+                    <td colspan="2">{{ adhesion.motivationFub }}</td>
+                </tr>
+            {% endif %}
+        </table>
+    </div>
+{% endfor %}

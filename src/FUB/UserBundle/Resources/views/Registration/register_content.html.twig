@@ -1,0 +1,50 @@
+{% trans_default_domain 'FOSUserBundle' %}
+{% extends "::baseRegister.html.twig" %}
+{% block fos_user_content %}
+
+<form action="{{ path("fos_user_registration_register") }}" method="post" class="form-signin">
+    <input type="hidden" id="fos_user_registration_form__token" name="fos_user_registration_form[_token]" value="lkmDfQ0Hs4VxTLaPzngQa1nzuG3Xfmio9sOMU3t3oaE" />
+    <div id="fos_user_registration_form" class="login-container">
+        <img src="{{ asset('pictures/fub.png') }}" alt="..." style="text-align: center" width="100%" height="100%">
+       <!-- <form>
+            <label for="fos_user_registration_form_email" class="required">Adresse e-mail</label>
+            <input type="email" id="fos_user_registration_form_email" name="fos_user_registration_form[email]" required="required" />
+            <label for="fos_user_registration_form_username" class="required">Nom d&#039;utilisateur</label>
+            <input type="text" id="fos_user_registration_form_username" name="fos_user_registration_form[username]" required="required" maxlength="180" pattern=".{2,}" />
+            <label for="fos_user_registration_form_plainPassword_first" class="required">Mot de passe</label>
+            <input type="password" id="fos_user_registration_form_plainPassword_first" name="fos_user_registration_form[plainPassword][first]" required="required" />
+            <label for="fos_user_registration_form_plainPassword_second" class="required">Répéter le mot de passe</label>
+            <input type="password" id="fos_user_registration_form_plainPassword_second" name="fos_user_registration_form[plainPassword][second]" required="required" />
+            <input type="submit" class="login login-submit" value="{{ 'registration.submit'|trans }}" />
+        </form>-->
+
+        {% block formulaire %}
+            {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+            {{ form_errors(form) }}
+
+            {{ form_label(form.username) }}
+            {{ form_widget(form.username) }}
+            {{ form_errors(form.username) }}
+
+            {{ form_label(form.email) }}
+            {{ form_widget(form.email) }}
+            {{ form_errors(form.email) }}
+
+            {{ form_label(form.plainPassword.first) }}
+            {{ form_widget(form.plainPassword.first) }}
+            {{ form_errors(form.plainPassword.first) }}
+
+            {{ form_label(form.plainPassword.second) }}
+            {{ form_widget(form.plainPassword.second) }}
+
+            {{ form_label(form.roles) }}
+            {{ form_widget(form.roles) }}
+
+            <input type="submit" class="login login-submit" value="{{ 'registration.submit'|trans }}" />
+
+            {{ form_rest(form) }}
+            {{ form_end(form) }}
+        {% endblock %}
+    </div>
+</form>
+{% endblock %}

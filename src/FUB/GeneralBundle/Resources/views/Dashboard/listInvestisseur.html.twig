@@ -1,0 +1,10 @@
+{% extends 'FUBGeneralBundle:Default:dashboard.html.twig' %}
+{% block content%}
+    <h1 class="page-header">Liste des investisseurs</h1>
+    {% for invest in investisseurs %}
+        <div id="migration" class="bs-callout bs-callout-info">
+            <img src="{{ asset('uploads/pictures/'~invest.picture) }}" alt="..." style="text-align: center" width="50" height="50">
+            <a href="{{ path('fub_general_dashboard_detailInvestisseur',{'investId': invest.id }) }}">{{ invest.nom }} {{ invest.prenom }}</a>
+        </div>
+    {% endfor %}
+{% endblock %}

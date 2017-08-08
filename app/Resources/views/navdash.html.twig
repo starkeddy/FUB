@@ -1,0 +1,116 @@
+<div class="nav-side-menu navbar-inverse">
+    <div class="navbar-brand">Free-United-Business</div>
+
+    <i class="navbar-toggle toggle-btn" data-toggle="collapse" data-target="#menu-content" aria-expanded="false">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+    </i>
+
+    <div class="menu-list">
+        <ul id="menu-content" class="menu-content collapse out">
+            <li{{ (app.request.attributes.get('_route') == 'fub_general_dashboard_ratio') ? ' class="active"' }}>
+                <a href="{{ path('fub_general_dashboard_ratio') }}">
+                    <i class="fa fa-user fa-lg"></i> Profile
+                </a>
+            </li>
+            <!--<ul class="sub-menu collapse" id="products">
+            </ul>-->
+            <li{{ (app.request.attributes.get('_route') == 'fub_general_ca') ? ' class="active"' }}>
+                <a href="{{ path('fub_general_ca') }}">
+                    <i class="fa fa-pie-chart" aria-hidden="true"></i> Chiffre d'affaire
+                </a>
+            </li>
+            <li{{ (app.request.attributes.get('_route') == 'fub_general_article') ? ' class="active"' }}>
+                <a href="{{ path('fub_general_article') }}">
+                    <i class="fa fa-shopping-bag" aria-hidden="true"></i> Article de vente
+                </a>
+            </li>
+            <li{{ (app.request.attributes.get('_route') == 'fub_general_stock') ? ' class="active"' }}>
+                <a href="{{ path('fub_general_stock') }}">
+                    <i class="fa fa-truck" aria-hidden="true"></i> Stock
+                </a>
+            </li>
+
+
+            <li{{ (app.request.attributes.get('_route') == 'fub_general_dashboard_listinvestisseur') ? ' class="active"' }}>
+                <a href="{{ path('fub_general_dashboard_listinvestisseur') }}">
+                    <i class="fa fa-users fa-lg"></i> Liste Investisseur
+                    <span class="badge" id="badge1"></span>
+                </a>
+            </li>
+
+            {% if is_granted('ROLE_ADMIN') %}
+                <li{{ (app.request.attributes.get('_route') == 'fub_general_dashboard_listadhesion') ? ' class="active"' }}>
+                    <a href="{{ path('fub_general_dashboard_listadhesion') }}">
+                        <i class="fa fa-users fa-lg"></i> Demande d'adhésion
+                        <span class="badge" id="badge2"></span>
+                    </a>
+                </li>
+                <li{{ (app.request.attributes.get('_route') == 'fub_general_dashboard_annonce') ? ' class="active"' }}>
+                    <a href="{{ path('fub_general_dashboard_annonce') }}">
+                        <i class="fa fa-bullhorn" aria-hidden="true"></i> Annonce
+                    </a>
+                </li>
+                <li{{ (app.request.attributes.get('_route') == 'fub_general_dashboard_main_invest') ? ' class="active"' }}>
+                    <a href="{{ path('fub_general_dashboard_main_invest') }}">
+                        <i class="fa fa-money" aria-hidden="true"></i> Opération
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+</div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script>
+    window.onload=loadAll();
+
+    function loadAll(){
+        getNombreInvest();
+        getNombreDemande();
+    }
+
+    function getNombreInvest(){
+        var url = '{{ path("fub_general_ajax_nombre_invest") }}';
+        document.getElementById('badge1').innerHTML = "0";
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: {  },
+            dataType: "json",
+            success: function(response) {
+                var donnee=JSON.parse(response);
+                donnee.forEach(function(result){
+                    document.getElementById('badge1').innerHTML=result.nb;
+                });
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown)
+            {
+                alert('Error: ' +  errorThrown);
+            }
+        });
+    }
+
+    function getNombreDemande(){
+        var url = '{{ path("fub_general_ajax_nombre_demande") }}';
+        document.getElementById('badge2').innerHTML = "0";
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: {  },
+            dataType: "json",
+            success: function(response) {
+                var donnee=JSON.parse(response);
+                donnee.forEach(function(result){
+                    document.getElementById('badge2').innerHTML=result.nb_demande;
+                });
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown)
+            {
+                alert('Error: ' +  errorThrown);
+            }
+        });
+    }
+</script>

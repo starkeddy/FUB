@@ -1,0 +1,66 @@
+{% extends 'FUBGeneralBundle:Default:dashboard.html.twig' %}
+{% block content%}
+    <h2 class="page-header">Annonce de la prochaine date d'investissement</h2>
+    {% block formulaire %}
+    {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+    {{ form_errors(form) }}
+    <div class="form-group" >
+        <table class="table table-bordered">
+            <tr>
+                <td>{{ form_label(form.upd_dt, "Date d'éstimation", {'label_attr': {'class': 'control-label'}}) }}
+                    {{ form_errors(form.upd_dt) }}
+                </td>
+                <td>
+                    {{ form_widget(form.upd_dt, {'attr': {'class': 'form-control'}}) }}
+                </td>
+            </tr>
+            <tr>
+                <td>{{ form_label(form.contenu, "Contenu de l'annonce ", {'label_attr': {'class': 'control-label'}}) }}
+                    {{ form_errors(form.contenu) }}
+                </td>
+                <td>
+                    {{ form_widget(form.contenu, {'attr': {'class': 'form-control'}}) }}
+                </td>
+            </tr>
+            <tr>
+                <td style="text-align: right">
+                    {{ form_widget(form.create, {'attr': {'class': 'btn btn-primary'},'label':'Créer annonce'}) }}
+                </td>
+                {{  form_rest(form) }}
+                {{ form_end(form) }}
+
+                {{ form_start(form2, {'attr': {'class': 'form-horizontal'}}) }}
+                {{ form_errors(form2) }}
+                <td>
+                    {{ form_widget(form2.disable, {'attr': {'class': 'btn btn-danger'},'label':"Désactiver l'annonce en cours"}) }}
+                </td>
+                {{  form_rest(form2) }}
+                {{ form_end(form2) }}
+            </tr>
+        </table>
+    </div>
+
+    {% endblock %}
+
+    <h2 class="sub-header">Historique des annonces</h2>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Date de l'investissement</th>
+                <th>Contenu de l'annonce</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for annonce in annonceHistorique %}
+                <tr>
+                    <td>{{ annonce.id }}</td>
+                    <td>{{ annonce.updDt|date('d-m-Y') }}</td>
+                    <td>{{ annonce.contenu }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

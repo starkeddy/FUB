@@ -1,0 +1,977 @@
+{% extends 'FUBGeneralBundle:Default:dashboard.html.twig' %}
+{% block content%}
+    <div style="text-align: center"><h4 class="sub-header">Reporting</h4></div>
+    <div class="panel panel-primary" style="text-align: center">
+        <div class="panel-heading">Filtre</div>
+        <div class="panel-body">
+            <table>
+                <tr>
+                    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+                    <td style="padding: 2px">Reference investissement<select id="inv" onchange=""></select></td>
+                    <td style="padding: 2px">Chiffre
+                        <select id="datatype" onchange="showDataPeriode(this.value)">
+                            <option value="daily">journalier</option>
+                            <option value="weekly">hebdomadaire</option>
+                            <option value="monthly">mensuel</option>
+                        </select>
+                    </td>
+                    </td>
+                    <td style="padding: 2px">Début de période <input type="text" id="debut_periode" required="required" class="form-control" /></td>
+                    <td style="padding: 2px">Fin de période <input type="text" id="fin_periode" required="required" class="form-control" /></td>
+                    <td style="padding: 2px"><button type="submit" id="valider" class="btn btn-primary" onclick="refresh()">rafraichir/valider</button></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="panel panel-primary" style="text-align: center">
+        <div class="panel-heading">Chiffre d'affaire</div>
+        <div class="panel-body">
+            <h4 class="sub-header">CA Global</h4>
+            <table border="1" style="width: 100%; height: auto">
+                <tr>
+                    <td><div id="container" style="width: 400px ; height: auto; margin: 0 auto"></div></td>
+                    <td><div id="container2" style="width: 400px; height: auto; margin: 0 auto"></div></td>
+                </tr>
+                <tr>
+                    <td><div id="container3" style="width: 400px; height: auto; margin: 0 auto"></div></td>
+                    <td><div id="container4" style="width: 400px; height: auto; margin: 0 auto"></div></td>
+                </tr>
+            </table>
+
+            <h4 class="sub-header">CA par catégorie</h4>
+            <table border="1" style="width: 100%; height: auto">
+                <tr>
+                    <td><div id="container5" style="width: 400px ; height: auto; margin: 0 auto"></div></td>
+                    <td><div id="container6" style="width: 400px; height: auto; margin: 0 auto"></div></td>
+                </tr>
+                <tr>
+                    <td><div id="container7" style="width: 400px; height: auto; margin: 0 auto"></div></td>
+                    <td><div id="container8" style="width: 400px; height: auto; margin: 0 auto"></div></td>
+                </tr>
+            </table>
+
+            <h4 class="sub-header">CA par marchandise</h4>
+            <table border="1" style="width: 100%; height: auto">
+                <tr>
+                    <td><div id="container9" style="width: 400px ; height: auto; margin: 0 auto"></div></td>
+                    <td><div id="container10" style="width: 400px; height: auto; margin: 0 auto"></div></td>
+                </tr>
+                <tr>
+                    <td><div id="container11" style="width: 400px; height: auto; margin: 0 auto"></div></td>
+                    <td><div id="container12" style="width: 400px; height: auto; margin: 0 auto"></div></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+
+    <script type="text/javascript">
+        function refresh(){
+            var str=document.getElementById("datatype").value;
+            var inv=document.getElementById("inv").value;
+            loadAllData(str,inv);
+        }
+        function codeAddress() {
+            loadInvList();
+        }
+
+        window.onload = codeAddress;
+    </script>
+
+    <script>
+        function changePeriode(str){
+            if(str=='daily'){
+                $('#debut_periode').val(moment().subtract(7, 'days').format('YYYY-MM-DD'));
+                $('#fin_periode').val(moment().format('YYYY-MM-DD'));
+            }else if(str=='weekly'){
+                moment().isoWeekday(1);
+                $('#debut_periode').val(moment().isoWeekday(1).subtract(3, 'weeks').format('W'));
+                $('#fin_periode').val(moment().isoWeekday(1).format('W'));
+            }else if(str=='monthly'){
+                $('#debut_periode').val(moment().subtract(3, 'months').format('YYYY-MM'));
+                $('#fin_periode').val(moment().format('YYYY-MM'));
+            }
+        }
+
+        function showDataPeriode(str,inv) {
+            changePeriode(str);
+            loadAllData(str,inv);
+        }
+
+        function loadAllData(str,inv){
+            var debut = $('#debut_periode').val();
+            var fin=$('#fin_periode').val();
+
+            if(str=='weekly'){
+                debut=moment().isoWeekday(1).week(parseInt(debut)).format('YYYY-MM-DD');
+                fin=moment().isoWeekday(1).week(parseInt(fin)).format('YYYY-MM-DD');
+                fin=moment(fin,'YYYY-MM-DD').add(6,'days').format('YYYY-MM-DD');
+            }else if(str=='monthly'){
+                debut=debut+"-01";
+                fin=fin+"-31";
+            }
+
+            loadCAGlocabal(str,inv,debut,fin);
+            loadBenefice(str,inv,debut,fin);
+            loadCategorie(str,inv,debut,fin);
+            loadCategorieRep(str,inv,debut,fin);
+            loadArticle(str,inv,debut,fin);
+            loadArticleRep(str,inv,debut,fin);
+        }
+
+        function loadInvList(){
+            var url = '{{ path("fub_general_stocklist") }}';
+
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: {  },
+                dataType: "json",
+                success: function(response) {
+                    updateSelect(response);
+                    var inv=document.getElementById("inv").value;
+                    var val=document.getElementById("datatype").value;
+                    showDataPeriode(val,inv);
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown)
+                {
+                    alert('Error: ' +  errorThrown);
+                }
+            });
+        }
+
+        function updateSelect(response){
+            var donnee = JSON.parse(response);
+            document.getElementById('inv').innerHTML = "";
+            donnee.forEach(function (list) {
+                daySelect = document.getElementById('inv');
+                daySelect.options[daySelect.options.length] = new Option(list.refinv, list.refinv);
+            });
+        }
+
+        function loadArticleRep(str,inv,debut,fin){
+            var url = '{{ path("fub_general_ajax_articleRep", {'name': 'article_id','debut':'start','fin':'end','refinv':'inves'}) }}';
+            url = url.replace("article_id", str);
+            url = url.replace("start", debut);
+            url = url.replace("end", fin);
+            url = url.replace("inves",inv);
+
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: {  },
+                dataType: "json",
+                success: function(response) {
+                    loadArticleRepChart(response,str);
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown)
+                {
+                    alert('Error: ' +  errorThrown);
+                }
+            });
+        }
+
+        function loadArticleRepChart(response,str){
+            var donnee = JSON.parse(response);
+
+            //load chart
+            // CA categorie repartition
+            var options11 = {
+                title: {
+                    text: "Répartition de vente par marchandise"
+                },
+                chart: {
+                    renderTo: 'container11',
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false,
+                    type: 'pie'
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                            style: {
+                                color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                            }
+                        }
+                    }
+                },
+                series: []
+            };
+
+
+            var chart11 = new Highcharts.Chart(options11);
+            chart11.addSeries({
+                name: "pourcentage de vente",
+                colorByPoint: true,
+                data: (function () {
+                    var data = Array();
+                    var i=0;
+                    donnee.forEach(function (ca) {
+                        var temp=new Array(ca.designation,parseInt(ca.qty));
+                        data[i]=temp;
+                        i++;
+                    });
+                    return data;
+                }())
+            },true);
+        }
+
+        function loadArticle(str,inv,debut,fin){
+            var url = '{{ path("fub_general_ajax_article", {'name': 'article_id','debut':'start','fin':'end','refinv':'inves'}) }}';
+            url = url.replace("article_id", str);
+            url = url.replace("start", debut);
+            url = url.replace("end", fin);
+            url = url.replace("inves",inv);
+
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: {  },
+                dataType: "json",
+                success: function(response) {
+                    loadArticleChart(response,str);
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown)
+                {
+                    alert('Error: ' +  errorThrown);
+                }
+            });
+        }
+
+        function loadArticleChart(response,str){
+            var donnee = JSON.parse(response);
+
+            //load chart
+            // CA article
+            var options9 = {
+                title: {
+                    text: "Chiffre d'affaire par marchandise"
+                },
+                chart: {
+                    renderTo: 'container9',
+                    type: 'spline'
+                },
+                series: [],
+                xAxis: {
+                    categories: [{}],
+                    title: {
+                        text: 'Période'
+                    }
+                },
+                yAxis: {
+                    title: {
+                        text: 'Montant en Ariary'
+                    },
+                }
+            };
+
+            options9.xAxis.categories=(function () {
+                var data = [];
+                donnee.forEach(function(res){
+                    res.donnee.forEach(function(ca){
+                        if(str=='daily'){
+                            if(data.indexOf(ca.upd_dt) === -1){
+                                data.push([ca.upd_dt]);
+                            }
+                        }else if(str=='weekly'){
+                            if(data.indexOf(ca.weekly) === -1){
+                                data.push([ca.weekly]);
+                            }
+                        }else if(str=='monthly'){
+                            if(data.indexOf(ca.monthly) === -1){
+                                data.push([ca.monthly]);
+                            }
+                        }
+                    });
+                });
+                return data;
+            }());
+
+            var chart9 = new Highcharts.Chart(options9);
+            donnee.forEach(function (res) {
+                chart9.addSeries({
+                    name: res.designation,
+                    data: (function () {
+                        var data = [];
+                        res.donnee.forEach(function (ca) {
+                            data.push([parseInt(ca.amount)]);
+                        });
+                        return data;
+                    }())
+                },true);
+            });
+
+            // NB vente article
+            var options10 = {
+                title: {
+                    text: "Nombre de vente par marchandise"
+                },
+                chart: {
+                    renderTo: 'container10',
+                    type: 'spline'
+                },
+                series: [],
+                xAxis: {
+                    categories: [{}],
+                    title: {
+                        text: 'Période'
+                    }
+                },
+                yAxis: {
+                    title: {
+                        text: ''
+                    },
+                }
+            };
+
+            options10.xAxis.categories=(function () {
+                var data = [];
+                donnee.forEach(function(res){
+                    res.donnee.forEach(function(ca){
+                        if(str=='daily'){
+                            if(data.indexOf(ca.upd_dt) === -1){
+                                data.push([ca.upd_dt]);
+                            }
+                        }else if(str=='weekly'){
+                            if(data.indexOf(ca.weekly) === -1){
+                                data.push([ca.weekly]);
+                            }
+                        }else if(str=='monthly'){
+                            if(data.indexOf(ca.monthly) === -1){
+                                data.push([ca.monthly]);
+                            }
+                        }
+                    });
+                });
+                return data;
+            }());
+
+            var chart10 = new Highcharts.Chart(options10);
+            donnee.forEach(function (res) {
+                chart10.addSeries({
+                    name: res.designation,
+                    data: (function () {
+                        var data = [];
+                        res.donnee.forEach(function (ca) {
+                            data.push([parseInt(ca.qty)]);
+                        });
+                        return data;
+                    }())
+                },true);
+            });
+
+            // Benefice article
+            var options12 = {
+                title: {
+                    text: "Bénéfice par marchandise"
+                },
+                subtitle: {
+                    text: "(Prix de vente - Prix d'achat)"
+                },
+                chart: {
+                    renderTo: 'container12',
+                    type: 'spline'
+                },
+                series: [],
+                xAxis: {
+                    categories: [{}],
+                    title: {
+                        text: 'Période'
+                    }
+                },
+                yAxis: {
+                    title: {
+                        text: 'Montant en ariary'
+                    },
+                }
+            };
+
+            options12.xAxis.categories=(function () {
+                var data = [];
+                donnee.forEach(function(res){
+                    res.donnee.forEach(function(ca){
+                        if(str=='daily'){
+                            if(data.indexOf(ca.upd_dt) === -1){
+                                data.push([ca.upd_dt]);
+                            }
+                        }else if(str=='weekly'){
+                            if(data.indexOf(ca.weekly) === -1){
+                                data.push([ca.weekly]);
+                            }
+                        }else if(str=='monthly'){
+                            if(data.indexOf(ca.monthly) === -1){
+                                data.push([ca.monthly]);
+                            }
+                        }
+                    });
+                });
+                return data;
+            }());
+
+            var chart12 = new Highcharts.Chart(options12);
+            donnee.forEach(function (res) {
+                chart12.addSeries({
+                    name: res.designation,
+                    data: (function () {
+                        var data = [];
+                        res.donnee.forEach(function (ca) {
+                            data.push([parseInt(ca.benef)]);
+                        });
+                        return data;
+                    }())
+                },true);
+            });
+        }
+
+        function loadCategorieRep(str,inv,debut,fin){
+            var url = '{{ path("fub_general_ajax_categorieRep", {'name': 'article_id','debut':'start','fin':'end','refinv':'inves'}) }}';
+            url = url.replace("article_id", str);
+            url = url.replace("start", debut);
+            url = url.replace("end", fin);
+            url = url.replace("inves",inv);
+
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: {  },
+                dataType: "json",
+                success: function(response) {
+                    loadCategorieRepChart(response,str);
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown)
+                {
+                    alert('Error: ' +  errorThrown);
+                }
+            });
+        }
+
+        function loadCategorieRepChart(response,str){
+            var donnee = JSON.parse(response);
+
+
+            //load chart
+            // CA categorie repartition
+            var options7 = {
+                title: {
+                    text: "Répartition de vente par catégorie"
+                },
+                chart: {
+                    renderTo: 'container7',
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false,
+                    type: 'pie'
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                            style: {
+                                color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                            }
+                        }
+                    }
+                },
+                series: []
+            };
+
+
+            var chart7 = new Highcharts.Chart(options7);
+            chart7.addSeries({
+                name: "pourcentage de vente",
+                colorByPoint: true,
+                data: (function () {
+                    var data = Array();
+                    var i=0;
+                    donnee.forEach(function (ca) {
+                        var temp=new Array(ca.designation,parseInt(ca.qty));
+                        data[i]=temp;
+                        i++;
+                    });
+                    return data;
+                }())
+            },true);
+        }
+
+        function loadCategorie(str,inv,debut,fin){
+            var url = '{{ path("fub_general_ajax_categorie", {'name': 'article_id','debut':'start','fin':'end','refinv':'inves'}) }}';
+            url = url.replace("article_id", str);
+            url = url.replace("start", debut);
+            url = url.replace("end", fin);
+            url = url.replace("inves",inv);
+
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: {  },
+                dataType: "json",
+                success: function(response) {
+                    loadCategorieChart(response,str);
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown)
+                {
+                    alert('Error: ' +  errorThrown);
+                }
+            });
+        }
+
+        function loadCategorieChart(response,str){
+            var donnee = JSON.parse(response);
+
+            //load chart
+            // CA categorie
+            var options5 = {
+                title: {
+                    text: "Chiffre d'affaire par catégorie"
+                },
+                chart: {
+                    renderTo: 'container5',
+                    type: 'spline'
+                },
+                series: [],
+                xAxis: {
+                    categories: [{}],
+                    title: {
+                        text: 'Période'
+                    }
+                },
+                yAxis: {
+                    title: {
+                        text: 'Montant en Ariary'
+                    },
+                }
+            };
+
+            options5.xAxis.categories=(function () {
+                var data = [];
+                donnee.forEach(function(res){
+                    res.donnee.forEach(function(ca){
+                        if(str=='daily'){
+                            if(data.indexOf(ca.upd_dt) === -1){
+                                data.push([ca.upd_dt]);
+                            }
+                        }else if(str=='weekly'){
+                            if(data.indexOf(ca.weekly) === -1){
+                                data.push([ca.weekly]);
+                            }
+                        }else if(str=='monthly'){
+                            if(data.indexOf(ca.monthly) === -1){
+                                data.push([ca.monthly]);
+                            }
+                        }
+                    });
+                });
+                return data;
+            }());
+
+            var chart5 = new Highcharts.Chart(options5);
+            donnee.forEach(function (res) {
+                chart5.addSeries({
+                    name: res.designation,
+                    data: (function () {
+                        var data = [];
+                        res.donnee.forEach(function (ca) {
+                            data.push([parseInt(ca.amount)]);
+                        });
+                        return data;
+                    }())
+                },true);
+            });
+
+            // NB vente categorie
+            var options6 = {
+                title: {
+                    text: "Nombre de vente par catégorie"
+                },
+                chart: {
+                    renderTo: 'container6',
+                    type: 'spline'
+                },
+                series: [],
+                xAxis: {
+                    categories: [{}],
+                    title: {
+                        text: 'Période'
+                    }
+                },
+                yAxis: {
+                    title: {
+                        text: ''
+                    },
+                }
+            };
+
+            options6.xAxis.categories=(function () {
+                var data = [];
+                donnee.forEach(function(res){
+                    res.donnee.forEach(function(ca){
+                        if(str=='daily'){
+                            if(data.indexOf(ca.upd_dt) === -1){
+                                data.push([ca.upd_dt]);
+                            }
+                        }else if(str=='weekly'){
+                            if(data.indexOf(ca.weekly) === -1){
+                                data.push([ca.weekly]);
+                            }
+                        }else if(str=='monthly'){
+                            if(data.indexOf(ca.monthly) === -1){
+                                data.push([ca.monthly]);
+                            }
+                        }
+                    });
+                });
+                return data;
+            }());
+
+            var chart6 = new Highcharts.Chart(options6);
+            donnee.forEach(function (res) {
+                chart6.addSeries({
+                    name: res.designation,
+                    data: (function () {
+                        var data = [];
+                        res.donnee.forEach(function (ca) {
+                            data.push([parseInt(ca.qty)]);
+                        });
+                        return data;
+                    }())
+                },true);
+            });
+
+            // Benefice categorie
+            var options8 = {
+                title: {
+                    text: "Bénéfice par catégorie"
+                },
+                subtitle: {
+                    text: "(Prix de vente - Prix d'achat)"
+                },
+                chart: {
+                    renderTo: 'container8',
+                    type: 'spline'
+                },
+                series: [],
+                xAxis: {
+                    categories: [{}],
+                    title: {
+                        text: 'Période'
+                    }
+                },
+                yAxis: {
+                    title: {
+                        text: 'Montant en ariary'
+                    },
+                }
+            };
+
+            options8.xAxis.categories=(function () {
+                var data = [];
+                donnee.forEach(function(res){
+                    res.donnee.forEach(function(ca){
+                        if(str=='daily'){
+                            if(data.indexOf(ca.upd_dt) === -1){
+                                data.push([ca.upd_dt]);
+                            }
+                        }else if(str=='weekly'){
+                            if(data.indexOf(ca.weekly) === -1){
+                                data.push([ca.weekly]);
+                            }
+                        }else if(str=='monthly'){
+                            if(data.indexOf(ca.monthly) === -1){
+                                data.push([ca.monthly]);
+                            }
+                        }
+                    });
+                });
+                return data;
+            }());
+
+            var chart8 = new Highcharts.Chart(options8);
+            donnee.forEach(function (res) {
+                chart8.addSeries({
+                    name: res.designation,
+                    data: (function () {
+                        var data = [];
+                        res.donnee.forEach(function (ca) {
+                            data.push([parseInt(ca.benef)]);
+                        });
+                        return data;
+                    }())
+                },true);
+            });
+        }
+
+        function loadBenefice(str,inv,debut,fin){
+            var url = '{{ path("fub_general_ajax_benefice", {'name': 'article_id','debut':'start','fin':'end','refinv':'inves'}) }}';
+            url = url.replace("article_id", str);
+            url = url.replace("start", debut);
+            url = url.replace("end", fin);
+            url = url.replace("inves",inv);
+
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: {  },
+                dataType: "json",
+                success: function(response) {
+                    loadBeneficeChart(response,str);
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown)
+                {
+                    alert('Error: ' +  errorThrown);
+                }
+            });
+        }
+
+        function loadBeneficeChart(response,str){
+            var donnee = JSON.parse(response);
+
+            //load chart
+            // Charge et benefice
+            var options3 = {
+                title: {
+                    text: "Charge"
+                },
+                chart: {
+                    renderTo: 'container3',
+                    type: 'spline'
+                },
+                series: [],
+                xAxis: {
+                    categories: [{}],
+                    title: {
+                        text: 'Période'
+                    }
+                },
+                yAxis: {
+                    title: {
+                        text: 'Montant en Ariary'
+                    },
+                }
+            };
+
+            options3.xAxis.categories=(function () {
+                var data = [];
+                donnee.forEach(function (ca) {
+                    if(str=='daily'){
+                        data.push([ca.upd_dt]);
+                    }else if(str=='weekly'){
+                        data.push([ca.weekly]);
+                    }else if(str=='monthly'){
+                        data.push([ca.monthly]);
+                    }
+                });
+                return data;
+            }());
+
+            var chart3 = new Highcharts.Chart(options3);
+            chart3.addSeries({
+                color:'#f7a35c',
+                name: "charge",
+                data: (function () {
+                    var data = [];
+                    donnee.forEach(function (ca) {
+                        data.push([parseInt(ca.charge)]);
+                    });
+                    return data;
+                }())
+            },true);
+
+            // Charge et benefice
+            var options4 = {
+                title: {
+                    text: "Bénéfice hors charge"
+                },
+                chart: {
+                    renderTo: 'container4',
+                    type: 'spline'
+                },
+                series: [],
+                xAxis: {
+                    categories: [{}],
+                    title: {
+                        text: 'Période'
+                    }
+                },
+                yAxis: {
+                    title: {
+                        text: 'Montant en Ariary'
+                    },
+                }
+            };
+
+            options4.xAxis.categories=(function () {
+                var data = [];
+                donnee.forEach(function (ca) {
+                    if(str=='daily'){
+                        data.push([ca.upd_dt]);
+                    }else if(str=='weekly'){
+                        data.push([ca.weekly]);
+                    }else if(str=='monthly'){
+                        data.push([ca.monthly]);
+                    }
+                });
+                return data;
+            }());
+
+            var chart4 = new Highcharts.Chart(options4);
+            chart4.addSeries({
+                name: "bénéfice TTC",
+                data: (function () {
+                    var data = [];
+                    donnee.forEach(function (ca) {
+                        data.push([parseInt(ca.ben_ttc)]);
+                    });
+                    return data;
+                }())
+            },true);
+            chart4.addSeries({
+                color:'#90ed7d',
+                name: "bénéfice HT",
+                data: (function () {
+                    var data = [];
+                    donnee.forEach(function (ca) {
+                        data.push([parseInt(ca.ben_ht)]);
+                    });
+                    return data;
+                }())
+            },true);
+        }
+
+        function loadCAGlocabal(str,inv,debut,fin){
+            var url = '{{ path("fub_general_ajax_content", {'name': 'article_id','debut':'start','fin':'end','refinv':'inves'}) }}';
+            url = url.replace("article_id", str);
+            url = url.replace("start", debut);
+            url = url.replace("end", fin);
+            url= url.replace("inves",inv);
+
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: {  },
+                dataType: "json",
+                success: function(response) {
+                    loadCAChart(response,str);
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown)
+                {
+                    alert('Error: ' +  errorThrown);
+                }
+            });
+        }
+
+        function loadCAChart(response,str){
+            var donnee = JSON.parse(response);
+
+            //load chart
+            // CA
+            var options = {
+                title: {
+                    text: "Chiffre d'affaire global"
+                },
+                chart: {
+                    renderTo: 'container',
+                    type: 'spline'
+                },
+                series: [{}],
+                xAxis: {
+                    categories: [{}],
+                    title: {
+                        text: 'Période'
+                    }
+                },
+                yAxis: {
+                    title: {
+                        text: 'Montant en Ariary'
+                    },
+                }
+            };
+
+            options.series[0].name = "CA global";
+            options.series[0].data=(function () {
+                var data = [];
+                donnee.forEach(function (ca) {
+                    data.push([parseInt(ca.amount)]);
+                });
+                return data;
+            }());
+            options.xAxis.categories=(function () {
+                var data = [];
+                donnee.forEach(function (ca) {
+                    if(str=='daily'){
+                        data.push([ca.upd_dt]);
+                    }else if(str=='weekly'){
+                        data.push([ca.weekly]);
+                    }else if(str=='monthly'){
+                        data.push([ca.monthly]);
+                    }
+                });
+                return data;
+            }());
+
+            var chart = new Highcharts.Chart(options);
+
+            // NB vente
+            var options2 = {
+                title: {
+                    text: "Nombre de vente global"
+                },
+                chart: {
+                    renderTo: 'container2',
+                    type: 'spline'
+
+                },
+                series: [{}],
+                xAxis: {
+                    categories: [{}],
+                    title: {
+                        text: 'Période'
+                    }
+                },
+                yAxis: {
+                    title: {
+                        text: ''
+                    },
+                }
+            };
+
+            options2.series[0].name = "NB vente";
+            options2.series[0].data=(function () {
+                var data = [];
+                donnee.forEach(function (ca) {
+                    data.push([parseInt(ca.nb_vente)]);
+                });
+                return data;
+            }());
+            options2.xAxis.categories=(function () {
+                var data = [];
+                donnee.forEach(function (ca) {
+                    if(str=='daily'){
+                        data.push([ca.upd_dt]);
+                    }else if(str=='weekly'){
+                        data.push([ca.weekly]);
+                    }else if(str=='monthly'){
+                        data.push([ca.monthly]);
+                    }
+                });
+                return data;
+            }());
+
+            var chart2 = new Highcharts.Chart(options2);
+        }
+    </script>
+
+{% endblock %}

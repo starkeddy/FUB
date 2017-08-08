@@ -1,0 +1,13 @@
+{% extends '::base.html.twig' %}
+{% block title %}Tableau de bord{% endblock %}
+{% block body%}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <div class="container-fluid" style="margin-top: 30px;">
+        <div class="row">
+        {% block navdash %}{% include '::navdash.html.twig' %}{% endblock %}
+            <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

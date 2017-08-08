@@ -1,0 +1,226 @@
+fub_general_homepage:
+    path:     /
+    defaults: { _controller: FUBGeneralBundle:Default:index }
+
+fub_general_rule:
+    path:     /reglement
+    defaults: { _controller: FUBGeneralBundle:Default:rule}
+
+fub_general_adhesionFrom:
+    path:     /adhesion
+    defaults: { _controller: FUBGeneralBundle:Adhesion:valid}
+
+fub_general_contact:
+    path:     /contact
+    defaults: { _controller: FUBGeneralBundle:Default:contact}
+
+fub_general_dashboard:
+    path:     /dashboard
+    defaults: { _controller: FUBGeneralBundle:DashBoard:dashboard}
+
+fub_general_ca:
+    path:     /dashboard/chiffe_affaire
+    defaults: { _controller: FUBGeneralBundle:CAglobal:ChiffreAfaire}
+    options:
+            expose: true
+
+fub_general_ajax_nombre_invest:
+    path:     /dashboard/get_nombre_invest
+    defaults: { _controller: FUBGeneralBundle:DashBoard:getNombreInvestisseur}
+    options:
+            expose: true
+
+
+fub_general_ajax_nombre_demande:
+    path:     /dashboard/get_nombr_demande
+    defaults: { _controller: FUBGeneralBundle:DashBoard:getNombreDemande}
+    options:
+            expose: true
+
+
+fub_general_article:
+    path:     /dashboard/articles
+    defaults: { _controller: FUBGeneralBundle:CAglobal:Article}
+    options:
+            expose: true
+
+fub_general_ajax_article_liste:
+    path:     /dashboard/articles_liste
+    defaults: { _controller: FUBGeneralBundle:CAglobal:loadArticleListe}
+    options:
+            expose: true
+
+fub_general_stock:
+    path:     /dashboard/stock_encours
+    defaults: { _controller: FUBGeneralBundle:CAglobal:StockEnCours}
+    options:
+            expose: true
+
+fub_general_stocklist:
+    path:     /dashboard/stock_list
+    defaults: { _controller: FUBGeneralBundle:CAglobal:loadInvList}
+    options:
+            expose: true
+
+fub_general_ajax_stock:
+    path:     /dashboard/stock/{refinv}
+    defaults: { _controller: FUBGeneralBundle:CAglobal:loadStock}
+    options:
+            expose: true
+
+
+fub_general_ajax_content:
+    path:     /dashboard/content/{name}/{debut}/{fin}/{refinv}
+    defaults: { _controller: FUBGeneralBundle:CAglobal:AjaxContent}
+    options:
+            expose: true
+
+fub_general_ajax_benefice:
+    path:     /dashboard/content/benefice/{name}/{debut}/{fin}/{refinv}
+    defaults: { _controller: FUBGeneralBundle:CAglobal:loadBenefice}
+    options:
+            expose: true
+
+fub_general_ajax_categorie:
+    path:     /dashboard/content/categorie/{name}/{debut}/{fin}/{refinv}
+    defaults: { _controller: FUBGeneralBundle:CAglobal:loadCategorie}
+    options:
+            expose: true
+
+fub_general_ajax_categorieRep:
+    path:     /dashboard/content/categorieRepartition/{name}/{debut}/{fin}/{refinv}
+    defaults: { _controller: FUBGeneralBundle:CAglobal:loadCategorieRep}
+    options:
+            expose: true
+
+fub_general_ajax_article:
+    path:     /dashboard/content/article/{name}/{debut}/{fin}/{refinv}
+    defaults: { _controller: FUBGeneralBundle:CAglobal:loadArticle}
+    options:
+            expose: true
+
+fub_general_ajax_articleRep:
+    path:     /dashboard/content/articleRepartition/{name}/{debut}/{fin}/{refinv}
+    defaults: { _controller: FUBGeneralBundle:CAglobal:loadArticleRep}
+    options:
+            expose: true
+
+
+fub_general_ajax_campagne_encours:
+    path:     /dashboard/campagne/encours
+    defaults: { _controller: FUBGeneralBundle:Invest:loadEncours}
+    options:
+            expose: true
+
+
+fub_general_ajax_campagne_history:
+    path:     /dashboard/campagne/history
+    defaults: { _controller: FUBGeneralBundle:Invest:loadHistory}
+    options:
+            expose: true
+
+fub_general_ajax_campagne_new_ref:
+    path:     /dashboard/campagne/newRef
+    defaults: { _controller: FUBGeneralBundle:Invest:loadLastRef}
+    options:
+            expose: true
+
+fub_general_ajax_campagne_cloturer:
+    path:     /dashboard/campagne/cloturer/{refinv}
+    defaults: { _controller: FUBGeneralBundle:Invest:cloturer}
+    options:
+            expose: true
+
+
+fub_general_ajax_campagne_valider:
+    path:     /dashboard/campagne/valider/{upd_dt}
+    defaults: { _controller: FUBGeneralBundle:Invest:validerCampagner}
+    options:
+            expose: true
+
+fub_general_ajax_campagne_lastinvest:
+    path:     /dashboard/campagne/lastinvest
+    defaults: { _controller: FUBGeneralBundle:Invest:loadLastInvestisor}
+    options:
+            expose: true
+
+fub_general_ajax_campagne_allinvest:
+    path:     /dashboard/campagne/allinvest
+    defaults: { _controller: FUBGeneralBundle:Invest:loadAllInvestisor}
+    options:
+            expose: true
+
+fub_general_ajax_campagne_loadamount:
+    path:     /dashboard/campagne/loadamount/{id}
+    defaults: { _controller: FUBGeneralBundle:Invest:loadAmount}
+    options:
+            expose: true
+
+fub_general_ajax_chargerProfil:
+    path:     /dashboard/loadProfil
+    defaults: { _controller: FUBGeneralBundle:Ratio:loadInfo}
+    options:
+            expose: true
+
+
+fub_general_ajax_campagne_loadTotal:
+    path:     /dashboard/campagne/totalratio
+    defaults: { _controller: FUBGeneralBundle:Invest:loadTotal}
+    options:
+            expose: true
+
+fub_general_ajax_campagne_addinvest:
+    path:     /dashboard/campagne/addinvest/{refinv}/{id}/{amount}
+    defaults: { _controller: FUBGeneralBundle:Invest:addInvest}
+    options:
+            expose: true
+
+fub_general_caglobal:
+    path:     /dashboard/caglobal/{name}/{debut}/{fin}/{refinv}
+    defaults: { _controller: FUBGeneralBundle:CAglobal:CAglobal}
+
+fub_general_dashboard_listadhesion:
+    path:     /dashboard/demande_adhesion
+    defaults: { _controller: FUBGeneralBundle:DashBoard:adhesionList}
+
+fub_general_dashboard_ratio:
+    path:     /dashboard/profil
+    defaults: { _controller: FUBGeneralBundle:Ratio:loadProfil}
+
+
+fub_general_dashboard_main_invest:
+    path:     /dashboard/campagne
+    defaults: { _controller: FUBGeneralBundle:Invest:loadMain}
+
+
+fub_general_dashboard_annonce:
+    path:     /dashboard/annonce
+    defaults: { _controller: FUBGeneralBundle:DashBoard:annonce}
+
+fub_general_dashboard_viewadhesion:
+    path:     /dashboard/viewadhesion/{demande}
+    defaults: { _controller: FUBGeneralBundle:DashBoard:adhesionView}
+
+fub_general_dashboard_viewcontrat:
+    path:     /dashboard/viewcontrat/{demande}
+    defaults: { _controller: FUBGeneralBundle:DashBoard:contrattopdf}
+
+fub_general_dashboard_listinvestisseur:
+    path:     /dashboard/liste_investisseur
+    defaults: { _controller: FUBGeneralBundle:DashBoard:listInvestisseur}
+
+fub_general_dashboard_detailInvestisseur:
+    path:     /dashboard/detail_investisseur/{investId}
+    defaults: { _controller: FUBGeneralBundle:DashBoard:detailInvestisseur}
+
+fub_general_dashboard_detailInvestisseurPDF:
+    path:     /dashboard/detail_investisseurPDF/{investId}
+    defaults: { _controller: FUBGeneralBundle:DashBoard:detailInvestisseurPDF}
+
+fub_general_dashboard_deleteAdhesionPDF:
+    path:     /dashboard/suppr_adhesion_PDF/{uploadId}
+    defaults: { _controller: FUBGeneralBundle:DashBoard:uploadAdhesionDelete}
+
+fub_general_dashboard_resilierInvestisseur:
+    path:     /dashboard/resilier_investisseur/{investId}
+    defaults: { _controller: FUBGeneralBundle:DashBoard:investisseurDelete}

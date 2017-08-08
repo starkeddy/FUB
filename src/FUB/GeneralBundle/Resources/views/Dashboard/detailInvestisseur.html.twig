@@ -1,0 +1,127 @@
+{% extends 'FUBGeneralBundle:Default:dashboard.html.twig' %}
+{% block content%}
+    <h1 class="page-header">Infomration sur l'investisseur</h1>
+    {% for adhesion in demande %}
+        <div class="form-group">
+            <table style="margin: 0 auto" width="90%" class="table table-bordered">
+                <tr>
+                    <td colspan="3"></td>
+                    <td><img src="{{ asset('uploads/pictures/'~adhesion.picture) }}" alt="..." style="text-align: center" width="100" height="100"></td>
+                </tr>
+                <tr>
+                    <th><b>Nom</b></th>
+                    <td>{{ adhesion.nom }}</td>
+                    <th><b>Prénom(s)</b></th>
+                    <td>{{ adhesion.prenom }}</td>
+                </tr>
+                <tr>
+                    <th><b>Date de naissance</b></th>
+                    <td>{{ adhesion.dateNaissance|date('d-m-Y') }}</td>
+                    <th><b>Profession</b></th>
+                    <td>{{ adhesion.profession }}</td>
+                </tr>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <tr>
+                        <th rowspan="2"><b>Filiation</b></th>
+                        <th><b>Père</b></th>
+                        <td colspan="2">{{ adhesion.perenom }}</td>
+                    </tr>
+                    <tr>
+                        <th><b>Mère</b></th>
+                        <td colspan="2">{{ adhesion.merenom }}</td>
+                    </tr>
+                {% endif %}
+                <tr>
+                    <th><b>Nationalité</b></th>
+                    <td>{{ adhesion.nationalite }}</td>
+                    <th><b>Adresse</b></th>
+                    <td>{{ adhesion.adresse }}</td>
+                </tr>
+                <tr>
+                    <th><b>Ville</b></th>
+                    <td>{{ adhesion.ville }}</td>
+                    <th><b>Pays</b></th>
+                    <td>{{ adhesion.country }}</td>
+                </tr>
+                <tr>
+                    <th><b>Contact</b></th>
+                    <td>+{{ adhesion.contact }}</td>
+                    <th><b>E-Mail</b></th>
+                    <td>{{ adhesion.mail }}</td>
+                </tr>
+                <tr>
+                    <th rowspan="2"><b>Montant à investir</b></th>
+                    <th><b>en chiffre</b></th>
+                    <td colspan="2">{{ adhesion.montantChiffre }}</td>
+                </tr>
+                <tr>
+                    <th><b>en lettre</b></th>
+                    <td colspan="2">{{ adhesion.montantLettre }}</td>
+                </tr>
+                <tr>
+                    <th><b>Date début du contrat</b></th>
+                    <td>{{ adhesion.dateContrat|date('d-m-Y') }}</td>
+                    <th><b>Durée du contrat</b></th>
+                    <td>{{ adhesion.dureeContrat }} mois</td>
+                </tr>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <tr>
+                        <th rowspan="4"><b>Qui contacter en cas
+                                de force majeur ou
+                                de décès</b>
+                        </th>
+                        <th><b>Nom et prénom(s)</b></th>
+                        <td colspan="2">{{ adhesion.heritieNomPrenom }}</td>
+                    </tr>
+                    <tr>
+                        <th><b>Contact</b></th>
+                        <td colspan="2">+{{ adhesion.heritierContact }}</td>
+                    </tr>
+                    <tr>
+                        <th><b>E-Mail</b></th>
+                        <td colspan="2">{{ adhesion.heritierMail }}</td>
+                    </tr>
+                    <tr>
+                        <th><b>Adresse</b></th>
+                        <td colspan="2">{{ adhesion.heritierAdresse }}</td>
+                    </tr>
+                    <tr>
+                        <th rowspan="2"><b>Sondage</b></th>
+                        <th><b>Comment aviez-vous
+                                connu FUB? </b></th>
+                        <td colspan="2">{{ adhesion.sondageFub }}</td>
+                    </tr>
+                    <tr>
+                        <th><b>Qu'est-ce qui vous
+                                pousse à investir chez FUB? </b></th>
+                        <td colspan="2">{{ adhesion.motivationFub }}</td>
+                    </tr>
+                {% endif %}
+                <tr>
+                    <td colspan="4" style="text-align: center">
+                        {% block formulaire %}
+
+                            <table style="margin: 0px auto">
+                                <tr>
+                                    {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+                                    {{ form_errors(form) }}
+                                    <td style="padding: 2px">{{ form_widget(form.view, {'attr': {'class': 'btn btn-primary'},'label':'Format PDF'}) }}</td>
+                                    {{ form_rest(form) }}
+                                    {{ form_end(form) }}
+                                {% if is_granted('ROLE_ADMIN') %}
+                                    {{ form_start(form2, {'attr': {'class': 'form-horizontal'}}) }}
+                                    {{ form_errors(form2) }}
+                                    <td style="padding: 2px">{{ form_widget(form2.delete, {'attr': {'class': 'btn btn-danger','onclick': 'return confirm("Voulez-vous vraiment résilier l\'investisseur?")'},'label':'Résilier investisseur'}) }}</td>
+                                    {{ form_rest(form2) }}
+                                    {{ form_end(form2) }}
+                                {% endif %}
+                                </tr>
+                            </table>
+
+                        {% endblock %}
+                    </td>
+                </tr>
+            </table>
+        </div>
+    {% endfor %}
+{% endblock %}

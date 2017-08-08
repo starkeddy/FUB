@@ -1,0 +1,45 @@
+{% extends '::base.html.twig' %}
+{% block title %}Accueil{% endblock %}
+{% block body%}
+    <div class="container" role="main" style="margin-top: 70px; width: 90%;">
+        <!-- 16:9 aspect ratio -->
+
+        <div data-example-id="responsive-embed-16by9-iframe-youtube">
+            <div class="embed-responsive embed-responsive-16by9">
+                <iframe class="embed-responsive-item" src="//www.youtube.com/embed/j_CbtnUnM5g?rel=0" allowfullscreen="">
+                </iframe>
+            </div>
+        </div>
+        <div class="thumbnail" style="text-align: center">
+            <img src="{{ asset('pictures/fub.png') }}" alt="..." style="text-align: center" width="40%" height="40%">
+            {% for annonce in annonces %}
+                <p><h4>{{ annonce.contenu }}</h4></p>
+                <p>Date éstimée du prochain investissement <h3><span class="label label-success">{{ annonce.updDt|date('d-m-Y') }}</span></h3></p>
+                <p><a class="btn btn-lg btn-primary" href="{{ path('fub_general_adhesionFrom') }}">S'investir</a></p>
+            {% endfor %}
+        </div>
+
+        <div id="migration" class="bs-callout bs-callout-warning">
+            <h4>A propos</h4>
+            <p>
+                <b>FUB</b> comme son nom l'indique <b>Free United Business</b> qui signifie union libre pour le business est une société
+                fondée le 03-07-2016 à Madagascar, plus précisement à Antananarivo, par des jeunes investisseurs guinéens ayant plusieurs
+                années d'expérience dans le monde du commerce.
+            </p>
+        </div>
+
+        <div id="migration" class="bs-callout bs-callout-warning">
+            <h4>Objectif du FUB</h4>
+            <p>La société s'étend sur plusieurs activités, tels que:
+                <ul>
+                    <li>Renforcer le tissu social</li>
+                    <li>Développer l'activité économique</li>
+                    <li>Promouvoir la culture</li>
+                </ul>
+                La société s'ouvre pour tout investisseur ayant un souhait d'élargir son business, que ce soit une personne physique ou morale qui alloue une part de capital
+                disponible dans l'attente d'un retour sur investissement.
+            </p>
+            <p>Ainsi nous invitons ceux qui seront intéressés à nous rejoindre au titre d'investisseur de la société.</p>
+        </div>
+    </div>
+{% endblock %}
